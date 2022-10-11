@@ -73,7 +73,7 @@ disposed1.dispose()
 
 ## 
 
-- [Subject] (https://medium.com/fantageek/rxswift-subjects-part1-publishsubjects-103ff6b06932) são tanto observable quanto subscribe
+- [Subject](https://medium.com/fantageek/rxswift-subjects-part1-publishsubjects-103ff6b06932) são tanto observable quanto subscribe
 - Ele recebe o evento  .next e cada vez que isto ocorre emite ao subscribe
 - Existe 4 subjects no artigo acima, Variable esta depreciado, recomendado  uso do BehaviorSubject
 
