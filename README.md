@@ -183,9 +183,114 @@ behavior2.asObservable()
 
 ```
 
+### Filters operators
+- Existem vários filters operators um deles e o elementAt
+- Ideia e capturar o elemento pelo seu índice no exemplo abaixo o índice 2
+- Ira printar 2,porque e o segundo índice
+
+```swift
+element.element(at: 2).subscribe(onNext:{value in
+	print(value)
+})
+
+element.onNext("5")
+element.onNext("2")
+element.onNext("3")
+
+```
+
+## 
+- Filter usa um predicate idêntico ao paradigma funcional, quando for verdadeiro essa condição retorna os valores
+- Abaixo ira printar apenas elementos pares
+
+```swift
+Observable.of(1,25,17,34,4,6,8).filter{ $0 % 2 == 0 }.subscribe(onNext:{
+	print($0)
+}).disposed(by: disposed)
+
+```
+
+##
+- Skip tem objetivo de pular elementos
+- Abaixo ira pular os 3 primeiros
+- Skip while ira pular enquanto for verdadeiro a condição, quando se tornar falsa para de pular
+- No exemplo abaixo o skipe while ira pular a partir do 5, consequentemente não ira printar o 5,7,4
+- Skip until ira aguardar ocorrer um trigger, apos isto ira printar os valores a partir desse trigger, então no exemplo abaixo ira printar o C e D
+
+```swift
+//skip
+Observable.of("A","B","C","D","G").skip(3).subscribe(onNext:{
+	print($0)
+}).disposed(by: disposed)
 
 
+//skip while
 
+Observable.of(2,2,4,5,7,4).skip(while: {
+	$0 % 2 == 0
+}).subscribe(onNext:{
+	print($0)
+}).disposed(by: disposed
+
+//skip until
+let skipUntil = PublishSubject<String>()
+let trigger = PublishSubject<String>()
+
+skipUntil.skip(until: trigger).subscribe(onNext:{
+	print($0)
+})
+
+skipUntil.onNext("A")
+skipUntil.onNext("C")
+skipUntil.onNext("D")
+
+trigger.onNext("C")
+
+skipUntil.onNext("C")
+skipUntil.onNext("D")
+
+```
+##
+- Take ele pega primeiros elementos baseado na quantidade colocada
+- No exemplo abaixo o take ira pegar os 3 primeiros
+- Take while ira pegar os verdadeiros conforme o predicate, neste precisa  condições  estiver no início da sequência se estiver no meio da  não ira refletir
+- Take until tudo abaixo do trigger não sera refletido, no caso abaixo o valor 8 não sera printado
+
+```swfit
+
+//take
+Observable.of(12,3,45,6)
+  .take(3)
+  .subscribe(onNext:{
+    print($0)
+  })
+
+//take while
+Observable.of(5,9,12,34,5,7,6,8)
+  .take(while: {
+    return $0 % 2 != 0
+  })
+  .subscribe(onNext:{
+    print($0)
+  })
+
+//take until
+let takeSubject = PublishSubject<String>()
+let triggerTake = PublishSubject<String>()
+
+takeSubject.take(until: triggerTake).subscribe(onNext:{
+	print($0)
+}).disposed(by: disposed)
+
+
+takeSubject.onNext("3")
+takeSubject.onNext("5")
+
+triggerTake.onNext("x")
+
+takeSubject.onNext("8")
+
+```
 
 
 
