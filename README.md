@@ -256,7 +256,7 @@ skipUntil.onNext("D")
 - Take while ira pegar os verdadeiros conforme o predicate, neste precisa  condições  estiver no início da sequência se estiver no meio da  não ira refletir
 - Take until tudo abaixo do trigger não sera refletido, no caso abaixo o valor 8 não sera printado
 
-```swfit
+```swift
 
 //take
 Observable.of(12,3,45,6)
