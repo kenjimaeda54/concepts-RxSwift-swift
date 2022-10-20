@@ -45,8 +45,7 @@ observable3.subscribe {
 }
 
 
-//disposed
-//maneira de evitar memoria leak
+
 
 let disposed = DisposeBag()
 
