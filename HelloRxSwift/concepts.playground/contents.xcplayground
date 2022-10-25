@@ -3,5 +3,6 @@
     <pages>
         <page name='filter-operators'/>
         <page name='Untitled Page'/>
+        <page name='transforming-operators'/>
     </pages>
 </playground>
