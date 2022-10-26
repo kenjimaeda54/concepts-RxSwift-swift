@@ -292,8 +292,7 @@ takeSubject.onNext("8")
 
 ```
 
-##
- Operadores  de transformação 
+## Operadores  de transformação 
 - Alguns dos operadores são flatmap,flatmap latest, map e  array
 - Flatmap, em geral, aplica um closrue para cada Observable emitindo e retornando um Observable. Ele se inscreve internamente em cada um desses observáveis e mescla-os,  finalmente retorna um  matriz plana
 - Preciso usar operador BehaviorRelay para representar a variável 
@@ -301,7 +300,7 @@ takeSubject.onNext("8")
 
 
 
-```swfit
+```swift
 
 //flatmap
 
