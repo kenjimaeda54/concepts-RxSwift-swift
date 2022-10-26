@@ -292,6 +292,73 @@ takeSubject.onNext("8")
 
 ```
 
+##
+ Operadores  de transformação 
+- Alguns dos operadores são flatmap,flatmap latest, map e  array
+- Flatmap, em geral, aplica um closrue para cada Observable emitindo e retornando um Observable. Ele se inscreve internamente em cada um desses observáveis e mescla-os,  finalmente retorna um  matriz plana
+- Preciso usar operador BehaviorRelay para representar a variável 
+- Flatmap Latest e similar ao Flatmap a diferença esta por conta que observable acontece apos o último  onNext, se tentar atualizar  um valor depois  sera ignorado
+
+
+
+```swfit
+
+//flatmap
+
+struct Student  {
+	var score: BehaviorRelay<Int>
+}
+
+let maria = Student(score: BehaviorRelay(value: 10))
+let pedro = Student(score: BehaviorRelay(value: 20))
+
+let student = PublishSubject<Student>()
+
+student.asObservable().flatMap {
+	$0.score.asObservable()
+}.subscribe(onNext: {
+	print($0)
+})
+
+
+student.onNext(maria)
+maria.score.accept(50)
+
+
+student.onNext(pedro)
+maria.score.accept(33)
+
+
+// flatmap latest
+print("\n Flat Map Latest")
+//flat latest operator
+
+struct Student2 {
+	var score: BehaviorRelay<Int>
+}
+
+let carlos =  Student2(score: BehaviorRelay(value: 30))
+let bia =  Student2(score: BehaviorRelay(value: 20))
+
+let flatMapLatest = PublishSubject<Student2>()
+
+flatMapLatest.asObserver().flatMapLatest {
+	$0.score.asObservable()
+}.subscribe(onNext: {
+	print($0)
+})
+
+flatMapLatest.onNext(carlos)
+carlos.score.accept(60)
+
+
+// Carlos nao ira atualizar apenas bia ,pois este e o comportamento do flatmap latest,apenas um observable 
+flatMapLatest.onNext(bia)
+carlos.score.accept(10)
+
+
+
+```
 
 
 
