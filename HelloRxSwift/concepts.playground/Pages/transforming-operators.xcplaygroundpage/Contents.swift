@@ -29,11 +29,11 @@ print("\n Flat Map")
 //precisa o score ser do tipo BehaviorRelay ou Variable
 //porque vou aplicar um observable neste valor
 struct Student  {
-   var score: BehaviorRelay<Int>
+	var score: BehaviorRelay<Int>
 }
 
-let john = Student(score: BehaviorRelay(value: 10))
-let maria = Student(score: BehaviorRelay(value: 20))
+let maria = Student(score: BehaviorRelay(value: 10))
+let pedro = Student(score: BehaviorRelay(value: 20))
 
 let student = PublishSubject<Student>()
 
@@ -41,13 +41,47 @@ student.asObservable().flatMap {
 	$0.score.asObservable()
 }.subscribe(onNext: {
 	print($0)
-}).disposed(by: disposed)
+})
 
+//repara qeu maria e pedro sao variaveis de uma struct
+//essa variavel precisa ser do tipo BehaviorRelay
 student.onNext(maria)
-maria.score.accept(30)
+maria.score.accept(50)
 
-student.onNext(john)
-john.score.accept(40)
+
+student.onNext(pedro)
+maria.score.accept(33)
+
+print("\n Flat Map Latest")
+//flat latest operator
+
+struct Student2 {
+	var score: BehaviorRelay<Int>
+}
+
+let carlos =  Student2(score: BehaviorRelay(value: 30))
+let bia =  Student2(score: BehaviorRelay(value: 20))
+
+let flatMapLatest = PublishSubject<Student2>()
+
+flatMapLatest.asObserver().flatMapLatest {
+	$0.score.asObservable()
+}.subscribe(onNext: {
+	print($0)
+})
+
+flatMapLatest.onNext(carlos)
+carlos.score.accept(60)
+
+//não sera atualizado Carlos, flatp map latest e similar
+//ao flat map a diferençá  realizara observable so  no último onNext  ou seja agora e variavel bia
+flatMapLatest.onNext(bia)
+carlos.score.accept(10)
+
+
+
+
+
 
 
 
