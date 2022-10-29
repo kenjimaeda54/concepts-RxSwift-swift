@@ -18,8 +18,6 @@ Aprender os principais recursos do RxSwfit
 - Para cancelar qualquer observable posso utilizar disposed
 
 
-
-
 ```swift
 
 //criando observable apenas com um elemento
@@ -355,12 +353,132 @@ carlos.score.accept(60)
 flatMapLatest.onNext(bia)
 carlos.score.accept(10)
 
+```
+
+## Combining Operators
+- Operadores de combinação, existe reduce, startWith, scan, merge...
+- StartWith, sequencia ira iniciar com o valor determinado na  propriedade
+
+```swift
+//ira iniciar com 1
+let seguenceNumber = Observable.of(3,4,5).startWith(1)
+
+seguenceNumber.subscribe(onNext: {
+print($0)
+}).disposed(by: disposed)
+
+```
+- Concat, operador e responsável por concatenar dois observable, respeitando a sequência 
+
+```swift
+let concat1 = Observable.of(1,2,3,4)
+let concat2 = Observable.of(6,7,8,9)
+let togetherConcat = Observable.concat([concat1,concat2])
+
+togetherConcat.subscribe(onNext: {
+	print($0) // 1 2 3 4 6 7 8 9
+}).disposed(by: disposed)
+```
+
+- Merge e similar ao concact, porem  respeita os valores em ordem de prioridade
+- Sequencia que segue abaixo no onNext sera idêntica ao print
+
+```swift
+let left = PublishSubject<Int>()
+let right = PublishSubject<Int>()
+
+let observableMerge =  Observable.of(left.asObservable(),right.asObservable())
+
+let mergeLeftRight = observableMerge.merge()
+
+mergeLeftRight.subscribe(onNext:{
+	print($0) //1 3 4 1 99 111
+})
+
+left.onNext(1)
+left.onNext(3)
+left.onNext(4)
+right.onNext(1)
+right.onNext(99)
+left.onNext(111)
+right.onNext(23)
+
+```
+- CombineLatest, operador que ao combinar ira gera um resultado baseado na condição do onResults
+- Exemplo abaixo sera o valor do leftCombine / rightCombine
+
+```swift
+let leftCombine = PublishSubject<Int>()
+let rightCombine = PublishSubject<Int>()
+
+ 
+let disposebleCombine = Observable.combineLatest(leftCombine,rightCombine) { left, right in
+	"\(left) / \(right)"
+}
+
+disposebleCombine.subscribe(onNext:{
+	print($0) // 30  / 20   30 / 17  30 / 13 
+}).disposed(by: disposed)
+
+leftCombine.onNext(20)
+leftCombine.onNext(30)
+rightCombine.onNext(20)
+rightCombine.onNext(17)
+rightCombine.onNext(13)
+
+```
+- WithLatestFrom funciona através de um trigger, após ser disparado o último resultado sera o valor do observable
+
+```swift
+let button = PublishSubject<Void>()
+let textField = PublishSubject<String>()
+
+let disposebleLastestFrom = button.withLatestFrom(textField)
+
+disposebleLastestFrom.subscribe(onNext:{
+	print($0) // caderno
+})
+
+
+textField.onNext("banana")
+textField.onNext("pera")
+textField.onNext("caderno")
+
+button.onNext(())
+
+
+```
+- [Reduce](http://equinocios.com/swift/2017/03/13/Introducao-e-casos-de-uso-Map-Filter-e-Reduce/) um operador bem comum em várias linguagens, inclusive no swift
+- Ele utiliza  um acumulador que sera o primeiro valor da condição, depois por callback tenho acesso às variáveis.
+- Abaixo no caso usei a momei as  variáveis como  value e oldValue
+
+```swift
+
+let collectionReduce = Observable.of(12,34,56,7)
+
+collectionReduce.reduce(0) { value,oldValue in
+	  value + oldValue
+}.subscribe(onNext: {
+	print($0) // 109
+}).disposed(by: disposed)
 
 
 ```
 
+- [Scan](https://developer.apple.com/documentation/combine/fail/scan(_:_:)) e parecido com reduce a diferença que não retorna apenas um valor, após finalizar
+- Ele ira gradualmente  retornar os valores
+
+```swift
+
+let collectionScan = Observable.of(12,34,56,7)
+
+collectionScan.scan(0) {
+	$0 + $1
+}.subscribe(onNext:{
+	print($0) // 12 46 102 109
+})
 
 
 
-
+``
 
